@@ -1,5 +1,7 @@
 package test
 
+import "fmt"
+
 var unicodeMap = map[string]int{
 	"1": 49,
 	"2": 50,
@@ -14,13 +16,15 @@ var unicodeMap = map[string]int{
 }
 
 func GetUnicodeCodePoint(char string) int {
-	return unicodeMap[char]
+	return unicodeMap[char] - 48
 }
 
 func GetNumber(num string) int {
 	var number int = 0
-	for i := range num {
-		number += GetUnicodeCodePoint(string(num[len(num)-i]))
+	for _, item := range num {
+		number = number * 10
+		fmt.Println("number : ", number)
+		number += GetUnicodeCodePoint(string(item))
 	}
 	return number
 }

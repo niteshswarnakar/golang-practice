@@ -1,9 +1,10 @@
 package main
 
 import (
-	nats_package "github.com/niteshswarnakar/golang-practice/natsio"
+	"github.com/niteshswarnakar/golang-practice/learn"
 )
 
 func main() {
-	nats_package.NatsIO()
+	// nats_package.NatsIO()
+	learn.Start()
 }
