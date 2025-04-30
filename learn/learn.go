@@ -19,7 +19,7 @@ var broadcastChannel = make(chan BroadCast)
 var mutex = &sync.Mutex{}
 
 func Start() {
-	log.Println("Web Sockets")
+	log.Println("Web Sockets Service")
 	go handleMessage()
 	http.HandleFunc("/ws", wsHandler)
 	log.Println("Starting web-socket server on :5000")

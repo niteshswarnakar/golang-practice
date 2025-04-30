@@ -19,7 +19,7 @@ FROM debian:bookworm
 WORKDIR /app
 
 # Copy the binary built in the first stage
-COPY --from=builder /app/main .
+COPY --from=builder /app .
 
 EXPOSE 5000
 

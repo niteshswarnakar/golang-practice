@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/niteshswarnakar/golang-practice/learn"
+	gin_server "github.com/niteshswarnakar/golang-practice/gin-server"
 )
 
 func main() {
 	// nats_package.NatsIO()
-	learn.Start()
+	// learn.Start()
+	gin_server.Server()
 }
