@@ -1,0 +1,11 @@
+{
+  "vendor": "PJNube",
+  "name": "Flex",
+  "profile": "UI",
+  "identity": "flex",
+  "architecture": "arm64",
+  "sysVersion": "0.0.0",
+  "description": "BE Counter Extension",
+  "version": "0.1.0",
+  "buildTime": "2025-03-10T09:32:01.078Z"
+}

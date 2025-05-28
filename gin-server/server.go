@@ -3,11 +3,10 @@ package gin_server
 import (
 	"fmt"
 	"net/http"
-	"net/url"
 	"reflect"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/niteshswarnakar/my-go-library/params"
 )
 
 func Server() {
@@ -17,12 +16,13 @@ func Server() {
 	if err := server.Run(":5000"); err != nil {
 		panic(err)
 	}
+
 }
 
 func handler(c *gin.Context) {
-	params := c.Request.URL.Query()
-	fmt.Println("\nPREVIOUS PARAMS : ", params)
-	myparams := GetQueryParams(params)
+	param := c.Request.URL.Query()
+	fmt.Println("\nPREVIOUS PARAMS : ", param)
+	myparams := params.GetQueryParams(param)
 	fmt.Printf("\nAFTER PARAMS : %s\n\n", myparams)
 	for key, item := range myparams {
 		value := item.Value
@@ -35,36 +35,5 @@ func handler(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Hello World"})
 	return
-}
 
-type MyAny struct {
-	Value any
-}
-type MyQueryParams map[string]MyAny
-
-func GetQueryParams(params url.Values) MyQueryParams {
-	result := make(MyQueryParams)
-	for key, value := range params {
-		if len(value) > 1 {
-			result[key] = MyAny{Value: value}
-		} else if len(value) == 1 {
-			val := value[0]
-			if val == "true" || val == "1" {
-				result[key] = MyAny{Value: true}
-			} else if val == "false" || val == "0" {
-				result[key] = MyAny{Value: false}
-			} else {
-				number, err := strconv.Atoi(val)
-				if err != nil {
-					fmt.Println("Error converting to int:", err)
-					result[key] = MyAny{Value: val}
-				} else {
-					result[key] = MyAny{Value: number}
-				}
-			}
-		} else {
-			result[key] = MyAny{Value: nil}
-		}
-	}
-	return result
 }

@@ -44,13 +44,11 @@ func RunEmbeddedServer(enableLogging bool) (*nats.Conn, *server.Server, error) {
 
 	fmt.Println("Leaf URL:", leafUrl)
 
-	opts := &server.Options{
+	ns := server.New(&server.Options{
 		Debug:   enableLogging,
 		Trace:   false,
 		Logtime: enableLogging,
-	}
-
-	ns := server.New(opts)
+	})
 
 	go ns.Start()
 
