@@ -3,7 +3,6 @@ package nats_package
 import (
 	"fmt"
 	"log"
-	"net/url"
 	"os"
 	"os/signal"
 	"syscall"
@@ -13,19 +12,21 @@ import (
 	"github.com/nats-io/nats.go"
 )
 
+type Data struct {
+	Data string `json:"data"`
+}
+
 func NatsIO() {
-	nc, ns, err := RunEmbeddedServer(true)
+	nc, ns, err := RunEmbeddedServer()
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	natsHandler := NewNatsHandler(nc)
+
 	defer nc.Close()
 
-	fmt.Println("Subscribing to NATS server...")
-	nc.Subscribe("hello.world", func(msg *nats.Msg) {
-		msg.Respond([]byte("Hello, this is data : " + string(msg.Data)))
-		fmt.Println("Received message:", string(msg.Data))
-	})
+	nc.Subscribe(subSubject, natsHandler.OnHelloWorld)
 
 	// Wait for interrupt signal
 	sigChan := make(chan os.Signal, 1)
@@ -36,18 +37,11 @@ func NatsIO() {
 	ns.Shutdown()
 }
 
-func RunEmbeddedServer(enableLogging bool) (*nats.Conn, *server.Server, error) {
-	leafUrl, err := url.Parse("nats-leaf://connect.ngs.global")
-	if err != nil {
-		return nil, nil, fmt.Errorf("URL parse error: %v", err)
-	}
-
-	fmt.Println("Leaf URL:", leafUrl)
-
+func RunEmbeddedServer() (*nats.Conn, *server.Server, error) {
 	ns := server.New(&server.Options{
-		Debug:   enableLogging,
+		Debug:   false,
 		Trace:   false,
-		Logtime: enableLogging,
+		Logtime: false,
 	})
 
 	go ns.Start()
@@ -56,14 +50,13 @@ func RunEmbeddedServer(enableLogging bool) (*nats.Conn, *server.Server, error) {
 		return nil, nil, fmt.Errorf("NATS server timeout")
 	}
 
-	if enableLogging {
-		ns.ConfigureLogger()
-	}
+	ns.ConfigureLogger()
 
 	nc, err := nats.Connect(nats.DefaultURL)
 	if err != nil {
 		return nil, nil, fmt.Errorf("NATS connection error: %v", err)
 	}
 
+	fmt.Println("NATS server is running at", ns.Addr())
 	return nc, ns, nil
 }
