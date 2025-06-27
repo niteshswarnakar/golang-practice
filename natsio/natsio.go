@@ -26,14 +26,29 @@ func NatsIO() {
 
 	defer nc.Close()
 
-	nc.Subscribe(subSubject, natsHandler.OnHelloWorld)
+	// Subscribe FIRST using the handler's method to track subscriptions
+	err = natsHandler.SubscribeToSubject(subSubject, natsHandler.OnHelloWorld)
+	if err != nil {
+		log.Fatal("Failed to subscribe:", err)
+	}
+	err = natsHandler.SubscribeToSubject(subSubject, natsHandler.OnHelloWorld)
+	if err != nil {
+		log.Fatal("Failed to subscribe:", err)
+	}
 
-	// Wait for interrupt signal
+	err = natsHandler.SubscribeToSubject(subSubject, natsHandler.OnHelloWorld)
+	if err != nil {
+		log.Fatal("Failed to subscribe:", err)
+	}
+
+	natsHandler.PrintSubscribedSubjects()
+
+	go natsHandler.PublishOnDemand(subSubject)
+
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 	<-sigChan
 
-	// Shutdown the server
 	ns.Shutdown()
 }
 
@@ -42,6 +57,8 @@ func RunEmbeddedServer() (*nats.Conn, *server.Server, error) {
 		Debug:   false,
 		Trace:   false,
 		Logtime: false,
+		Host:    "localhost",
+		Port:    4222,
 	})
 
 	go ns.Start()
@@ -57,6 +74,6 @@ func RunEmbeddedServer() (*nats.Conn, *server.Server, error) {
 		return nil, nil, fmt.Errorf("NATS connection error: %v", err)
 	}
 
-	fmt.Println("NATS server is running at", ns.Addr())
+	fmt.Println("NATS server is running at", nats.DefaultURL)
 	return nc, ns, nil
 }
