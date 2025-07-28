@@ -17,25 +17,14 @@ type NatsHandler struct {
 }
 
 func (h *NatsHandler) OnHelloWorld(msg *nats.Msg) {
-	fmt.Println("$$SUBSCRIBE DATA : ", string(msg.Data), "\n")
-	// resp := new(Data)
-	// err := json.Unmarshal(msg.Data, resp)
-	// if err != nil {
-	// 	log.Printf("Error unmarshalling message: %v", err)
-	// }
-	// log.Println("Received message:", resp.Data)
-	// msg.Respond([]byte("Hello " + resp.Data))
-
-	// if err := h.PublishOnDemand(pubSubject); err != nil {
-	// 	log.Printf("nitesh publishing message: %v", err)
-	// 	return
-	// }
+	fmt.Println("\nMSG HANDLER msg.Subject : ", msg.Subject)
+	fmt.Println("MSG HANDLER msg.Data : ", string(msg.Data))
 }
 
 func (h *NatsHandler) PublishOnDemand(subject string) error {
 	var i int = 0
 	for {
-		time.Sleep(3 * time.Second)
+		time.Sleep(5 * time.Second)
 		data := Data{Data: fmt.Sprintf("OnDemand, %d", i)}
 		dataBytes, err := json.Marshal(data)
 		if err != nil {

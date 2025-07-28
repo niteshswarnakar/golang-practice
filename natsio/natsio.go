@@ -26,17 +26,11 @@ func NatsIO() {
 
 	defer nc.Close()
 
-	// Subscribe FIRST using the handler's method to track subscriptions
 	err = natsHandler.SubscribeToSubject(subSubject, natsHandler.OnHelloWorld)
 	if err != nil {
 		log.Fatal("Failed to subscribe:", err)
 	}
-	err = natsHandler.SubscribeToSubject(subSubject, natsHandler.OnHelloWorld)
-	if err != nil {
-		log.Fatal("Failed to subscribe:", err)
-	}
-
-	err = natsHandler.SubscribeToSubject(subSubject, natsHandler.OnHelloWorld)
+	err = natsHandler.SubscribeToSubject(subSubject2, natsHandler.OnHelloWorld)
 	if err != nil {
 		log.Fatal("Failed to subscribe:", err)
 	}

@@ -1,7 +1,11 @@
 package main
 
-import nats_package "github.com/niteshswarnakar/golang-practice/natsio"
+import (
+	"github.com/niteshswarnakar/golang-practice/mysystemctl"
+)
 
 func main() {
-	nats_package.NatsIO()
+	// nats_package.NatsIO()
+	// s3bucket.RunBucket()
+	mysystemctl.Run()
 }
