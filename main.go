@@ -1,11 +1,7 @@
 package main
 
-import (
-	"github.com/niteshswarnakar/golang-practice/mysystemctl"
-)
+import "github.com/niteshswarnakar/golang-practice/chatapi"
 
 func main() {
-	// nats_package.NatsIO()
-	// s3bucket.RunBucket()
-	mysystemctl.Run()
+	chatapi.Runner()
 }
