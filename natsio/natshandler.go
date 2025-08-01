@@ -10,6 +10,10 @@ import (
 	"github.com/nats-io/nats.go"
 )
 
+type MsgQueue chan *nats.Msg
+
+// var subQueue = make(MsgQueue, 100)
+
 type NatsHandler struct {
 	Conn          *nats.Conn
 	subscriptions map[string]*nats.Subscription
@@ -17,24 +21,28 @@ type NatsHandler struct {
 }
 
 func (h *NatsHandler) OnHelloWorld(msg *nats.Msg) {
-<<<<<<< Updated upstream
-	fmt.Println("\nMSG HANDLER msg.Subject : ", msg.Subject)
-	fmt.Println("MSG HANDLER msg.Data : ", string(msg.Data))
-=======
-	fmt.Println("$$SUBSCRIBE DATA : ", string(msg.Data), "\n")
-	// resp := new(Data)
-	// err := json.Unmarshal(msg.Data, resp)
-	// if err != nil {
-	// 	log.Printf("Error unmarshalling message: %v", err)
-	// }
-	// log.Println("Received message:", resp.Data)
-	// msg.Respond([]byte("Hello " + resp.Data))
+	fmt.Println("\n$Started")
+	startTime := time.Now()
+	resp := new(Data)
+	err := json.Unmarshal(msg.Data, resp)
+	if err != nil {
+		log.Printf("Error unmarshalling message: %v", err)
+	}
+	log.Println("Received message:", resp.Data)
+	time.Sleep(10 * time.Second)
 
+	log.Printf("Responded to message on subject: %s", msg.Subject)
+	endTime := time.Now()
+	fmt.Println("Elapsed time: ", endTime.Sub(startTime))
+
+	err = msg.Respond([]byte("\nHello User" + endTime.Sub(startTime).String()))
+	if err != nil {
+		log.Printf("Error responding to message: %v", err)
+	}
 	// if err := h.PublishOnDemand(pubSubject); err != nil {
 	// 	log.Printf("nitesh publishing message: %v", err)
 	// 	return
 	// }
->>>>>>> Stashed changes
 }
 
 func (h *NatsHandler) PublishOnDemand(subject string) error {
@@ -60,7 +68,11 @@ func (h *NatsHandler) SubscribeToSubject(subject string, handler nats.MsgHandler
 	h.mu.Lock()
 	defer h.mu.Unlock()
 
-	sub, err := h.Conn.Subscribe(subject, handler)
+	workerCount := 10
+	msgChan := make(chan *nats.Msg, workerCount*2)
+
+	// sub, err := h.Conn.Subscribe(subject, handler)
+	sub, err := h.Conn.ChanSubscribe(subject, msgChan)
 	if err != nil {
 		return err
 	}

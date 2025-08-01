@@ -1,7 +1,9 @@
 package main
 
-import "github.com/niteshswarnakar/golang-practice/chatapi"
+import (
+	nats_package "github.com/niteshswarnakar/golang-practice/natsio"
+)
 
 func main() {
-	chatapi.Runner()
+	nats_package.NatsIO()
 }
