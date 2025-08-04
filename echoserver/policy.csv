@@ -1,0 +1,12 @@
+p, user, /api/v1/kathmandu, GET
+p, user, /api/v1/kathmandu, POST
+p, user, /api/v1/pokhara, GET
+p, user, /api/v1/pokhara, POST
+p, admin, /api/v1/kathmandu, *
+p, admin, /api/v1/pokhara, *
+p, admin, /api/v1/public, *
+
+# Define user-role relationships (g represents the role definition)
+g, nitesh, admin
+g, bob, user
+g, alice, user

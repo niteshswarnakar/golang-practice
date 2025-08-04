@@ -1,9 +1,9 @@
 package main
 
 import (
-	nats_package "github.com/niteshswarnakar/golang-practice/natsio"
+	"github.com/niteshswarnakar/golang-practice/echoserver"
 )
 
 func main() {
-	nats_package.NatsIO()
+	echoserver.Runner()
 }
